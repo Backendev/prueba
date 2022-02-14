@@ -1,113 +1,92 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+  <div id="canvas"></div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
-}
-</script>
+import * as THREE from "three";
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+export default {
+  name: "HelloWorld",
+  data() {
+    return {
+      background: 0x0080ff,
+      alpha: 0,
+      canvas: "canvas",
+      width: "100%",
+      height: window.innerHeight+"px",
+      pading:0
+    };
+  },
+  methods: {
+
+    init: function() {
+      let container = document.getElementById(this.canvas);
+      container.style.width = this.width;
+      container.style.height = this.height;
+      const light = new THREE.AmbientLight( 0x404040 );
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      this.renderer.setClearColor(this.background, this.alpha);
+      this.renderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(this.renderer.domElement);
+      this.scene = new THREE.Scene();
+      //console.log(container.clientWidth / container.clientHeight);
+      this.camera = new THREE.OrthographicCamera(
+        container.clientWidth /-50,
+        container.clientWidth /50,
+        container.clientHeight/50,
+        container.clientHeight/-50,
+        1,
+        100
+      );
+
+      this.camera.position.z = 10;
+
+      this.scene = new THREE.Scene();
+      // const bola = new PinaCollada('../assets/models/bola',1)
+      //const loader = new ColladaLoader();
+      const geometry = new THREE.BoxGeometry(1,1, 1);
+      const material = new THREE.MeshNormalMaterial();
+      const material2 = new THREE.MeshNormalMaterial();
+      
+      //this.pinaCollada('bola', 1.2);
+      
+      //this.pinaCollada2('bola',1,material2)
+      //this.pinaCollada2('bola',1,material2)
+      //this.scene.add(this.mesh2)
+      //console.log(this.mesh2)
+      this.mesh = new THREE.Mesh(geometry, material);
+      this.scene.add(this.mesh);
+      //this.scene.add(this.mesh2);
+      this.scene.add(light)
+      
+      //this.loadOBJ()
+      //this.loadOBJ2()
+      //this.loadGLTF()
+
+
+
+
+
+
+
+
+      this.ani();
+    },
+    ani: function() {
+      // console.log("estoy ejecutandome");
+      requestAnimationFrame(this.ani);
+      this.mesh.rotation.z += 0.01;
+      //this.mesh2.rotation.z += 0.01;
+      this.mesh.rotation.x += 0.02;
+      this.mesh.rotation.z += 0.03;
+      this.renderer.render(this.scene, this.camera);
+    },
+  },
+  mounted() {
+    this.init();
+  },
+};
+</script>
+<style>
+  
 </style>
